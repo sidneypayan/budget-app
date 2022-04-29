@@ -85,9 +85,13 @@ const ExpensesForm = ({
 				expenses={expenses}
 			/>
 
-			<div className='gross-income'>
-				Total charges {expenseType} : {Math.round(totalExpenses * 100) / 100}
-			</div>
+			{totalExpenses ? (
+				<div className='gross-income'>
+					Total charges {expenseType} : {Math.round(totalExpenses * 100) / 100}
+				</div>
+			) : (
+				''
+			)}
 		</div>
 	)
 }
