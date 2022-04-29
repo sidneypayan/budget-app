@@ -1,0 +1,14 @@
+<div className='form-container'>
+  <form className='form' onSubmit={handleSubmit}>
+    <h2>Jours travaillés</h2>
+    <div className='form-input'>
+      <label htmlFor='daysWorked'>Nombre de jours travaillés / mois</label>
+      <input type='number' id='daysWorked' name='daysWorked' value={formData.daysWorked} onChange={handleChange} />
+    </div>
+    <div className='form-input'>
+      <label htmlFor='dailyIncome'>CA / jour</label>
+      <input type='number' id='dailyIncome' name='dailyIncome' value={formData.dailyIncome} onChange={handleChange} />
+    </div>
+    <button>Ajouter</button>
+  </form>
+</div>

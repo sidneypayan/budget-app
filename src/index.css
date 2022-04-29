@@ -1,13 +1,165 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+	box-sizing: border-box;
+	margin: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+	background-color: #003049;
+	color: #fff;
+	font-family: 'Montserrat';
+	letter-spacing: 0.5px;
+	line-height: 1.5rem;
+}
+
+main {
+	display: flex;
+	flex-wrap: wrap;
+	width: 95%;
+	margin: 0 auto;
+	margin-top: 4rem;
+}
+
+a {
+	text-decoration: none;
+	color: #fff;
+}
+
+h1 {
+	margin-top: 5rem;
+	margin-left: 3rem;
+}
+
+button {
+	cursor: pointer;
+	background-color: #0091ad;
+	width: 100%;
+	border: none;
+	color: inherit;
+	margin-top: 0.5rem;
+	margin-bottom: 2rem;
+	padding: 0.5rem;
+	font-family: inherit;
+	font-weight: bold;
+}
+
+input,
+select {
+	border: none;
+	padding: 0.5rem;
+	display: block;
+	width: 100%;
+	font-family: inherit;
+}
+
+label {
+	font-weight: bold;
+	display: block;
+	padding-bottom: 0.25rem;
+}
+
+.forms-container {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	margin: 0 auto;
+	width: 75%;
+	gap: 2%;
+}
+
+.form-container {
+	width: 23%;
+}
+
+.expenses {
+	width: 24%;
+	margin: 0 auto;
+	padding-left: 2rem;
+}
+
+.form-input {
+	margin-top: 0.75rem;
+}
+
+.delete {
+	font-size: 0.8rem;
+	cursor: pointer;
+	margin-left: 0.5rem;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.fixed-charges:hover .delete {
+	opacity: 1;
+}
+
+.domestic-charges:hover .delete {
+	opacity: 1;
+}
+
+.gross-income,
+.variable-charges,
+.total-fixed-charges,
+.total-domestic-charges {
+	margin-top: 1rem;
+	color: #ffaa00;
+}
+
+.total-charges,
+.net-salary,
+.saving {
+	color: #ffaa00;
+}
+
+.variableForm,
+.ExpensesForm,
+.expenses {
+	opacity: 0;
+	transition: opacity 0.5s;
+}
+
+.variableForm.show,
+.ExpensesForm.show,
+.expenses.show {
+	opacity: 1;
+}
+
+#variableChargesForm.show,
+#fixedChargesForm.show,
+#domesticChargesForm.show {
+	opacity: 1;
+}
+
+.info {
+	font-size: 14px;
+}
+
+@media screen and (max-width: 1229px) {
+	.forms-container,
+	.expenses {
+		width: 85%;
+		margin-bottom: 2rem;
+		padding: 0;
+	}
+
+	body {
+		font-size: 0.9rem;
+	}
+
+	.form-container {
+		margin-top: 2rem;
+		width: 45%;
+	}
+	.gross-income,
+	.variable-charges,
+	.total-fixed-charges,
+	.total-domestic-charges {
+		margin-top: 0;
+	}
+}
+
+@media screen and (max-width: 680px) {
+	.forms-container,
+	.expenses {
+		width: 100%;
+	}
 }
