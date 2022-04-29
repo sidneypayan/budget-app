@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react'
 
-import IncomeForm from './components/IncomeForm'
-import ExpensesForm from './components/ExpensesForm'
-import BalanceContainer from './components/BalanceContainer'
-
-function App() {
+const useBudgetApp = () => {
 	// --- USESTATE --- //
-	const [incomeData, setIncomeData] = React.useState(
+	const [incomeData, setIncomeData] = useState(
 		JSON.parse(localStorage.getItem('incomeData')) || {}
 	)
-	const [variableExpenses, setVariableExpenses] = React.useState(
+	const [variableExpenses, setVariableExpenses] = useState(
 		JSON.parse(localStorage.getItem('variableExpenses')) || []
 	)
-	const [fixedExpenses, setFixedExpenses] = React.useState(
+	const [fixedExpenses, setFixedExpenses] = useState(
 		JSON.parse(localStorage.getItem('fixedExpenses')) || []
 	)
-	const [domesticExpenses, setDomesticExpenses] = React.useState(
+	const [domesticExpenses, setDomesticExpenses] = useState(
 		JSON.parse(localStorage.getItem('domesticExpenses')) || []
 	)
 	const [totalVariableExpenses, setTotalVariableExpenses] = useState(
@@ -201,7 +196,7 @@ function App() {
 		return profit
 	}
 
-	// // Supprimer une charge
+	// SUPPRIMER UNE CHARGE
 	const deleteTask = (id, expenseType) => {
 		if (expenseType === 'variable') {
 			setVariableExpenses(prevTypeExpenses =>
@@ -222,50 +217,23 @@ function App() {
 		}
 	}
 
-	return (
-		<main>
-			<div className='forms-container'>
-				<IncomeForm onSubmit={calculateMonthlyIncome} incomeData={incomeData} />
-
-				<ExpensesForm
-					title='Charges Variables'
-					onSubmit={addVariableExpense}
-					totalExpenses={totalVariableExpenses}
-					expenses={variableExpenses}
-					show={Object.keys(incomeData).length && 'show'}
-					onDelete={deleteTask}
-					expenseType='variable'
-				/>
-
-				<ExpensesForm
-					title='Charges Fixes'
-					onSubmit={addFixedExpense}
-					totalExpenses={totalFixedExpenses}
-					expenses={fixedExpenses}
-					show={(totalVariableExpenses || totalFixedExpenses) && 'show'}
-					onDelete={deleteTask}
-					expenseType='fixed'
-				/>
-
-				<ExpensesForm
-					title='Charges Domestiques'
-					onSubmit={addDomesticExpense}
-					totalExpenses={totalDomesticExpenses}
-					expenses={domesticExpenses}
-					show={(totalFixedExpenses || totalDomesticExpenses) && 'show'}
-					onDelete={deleteTask}
-					expenseType='domestic'
-				/>
-			</div>
-			<BalanceContainer
-				incomeData={incomeData}
-				totalProfessionalExpenses={totalProfessionalExpenses}
-				salary={salary}
-				profit={profit}
-				show={totalProfessionalExpenses && 'show'}
-			/>
-		</main>
-	)
+	return {
+		incomeData,
+		variableExpenses,
+		fixedExpenses,
+		domesticExpenses,
+		totalVariableExpenses,
+		totalFixedExpenses,
+		totalDomesticExpenses,
+		totalProfessionalExpenses,
+		salary,
+		profit,
+		calculateMonthlyIncome,
+		addVariableExpense,
+		addFixedExpense,
+		addDomesticExpense,
+		deleteTask,
+	}
 }
 
-export default App
+export default useBudgetApp

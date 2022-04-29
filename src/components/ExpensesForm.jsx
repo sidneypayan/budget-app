@@ -65,7 +65,7 @@ const ExpensesForm = ({
 				</div>
 				<div className='form-input'>
 					<label htmlFor='expenseAmount'>
-						Montant {expenseType === 'variable' && 'à saisir en %'}
+						Montant {expenseType === 'variable' && '(% du CA)'}
 					</label>
 					<input
 						type='number'
