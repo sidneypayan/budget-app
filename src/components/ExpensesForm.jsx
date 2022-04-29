@@ -71,6 +71,7 @@ const ExpensesForm = ({
 						type='number'
 						id='expenseAmount'
 						name='expenseAmount'
+						step='.01'
 						value={formData.expenseAmount}
 						onChange={handleChange}
 					/>
@@ -84,29 +85,9 @@ const ExpensesForm = ({
 				expenses={expenses}
 			/>
 
-			{expenseType === 'variable' && totalExpenses ? (
-				<div className='gross-income'>
-					Total charges variables : {totalExpenses}
-				</div>
-			) : (
-				''
-			)}
-
-			{expenseType === 'fixed' && totalExpenses ? (
-				<div className='gross-income'>
-					Total charges fixes : {totalExpenses}
-				</div>
-			) : (
-				''
-			)}
-
-			{expenseType === 'domestic' && totalExpenses ? (
-				<div className='gross-income'>
-					Total charges domestiques : {totalExpenses}
-				</div>
-			) : (
-				''
-			)}
+			<div className='gross-income'>
+				Total charges {expenseType} : {Math.round(totalExpenses * 100) / 100}
+			</div>
 		</div>
 	)
 }

@@ -15,7 +15,7 @@ function App() {
 		totalProfessionalExpenses,
 		salary,
 		profit,
-		calculateMonthlyIncome,
+		addIncomeData,
 		addVariableExpense,
 		addFixedExpense,
 		addDomesticExpense,
@@ -25,7 +25,7 @@ function App() {
 	return (
 		<main>
 			<div className='forms-container'>
-				<IncomeForm onSubmit={calculateMonthlyIncome} incomeData={incomeData} />
+				<IncomeForm onSubmit={addIncomeData} incomeData={incomeData} />
 
 				<ExpensesForm
 					title='Charges Variables'
@@ -34,7 +34,7 @@ function App() {
 					expenses={variableExpenses}
 					show={Object.keys(incomeData).length && 'show'}
 					onDelete={deleteTask}
-					expenseType='variable'
+					expenseType='variables'
 				/>
 
 				<ExpensesForm
@@ -44,7 +44,7 @@ function App() {
 					expenses={fixedExpenses}
 					show={(totalVariableExpenses || totalFixedExpenses) && 'show'}
 					onDelete={deleteTask}
-					expenseType='fixed'
+					expenseType='fixes'
 				/>
 
 				<ExpensesForm
@@ -54,7 +54,7 @@ function App() {
 					expenses={domesticExpenses}
 					show={(totalFixedExpenses || totalDomesticExpenses) && 'show'}
 					onDelete={deleteTask}
-					expenseType='domestic'
+					expenseType='domestiques'
 				/>
 			</div>
 			<BalanceContainer

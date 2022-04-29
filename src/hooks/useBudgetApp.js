@@ -37,25 +37,46 @@ const useBudgetApp = () => {
 
 	// AJOUT DES REVENUS A LOCALSTORAGE CHAQUE FOIS QUE CES DERNIERS SONT CHANGES PAR L'USER
 	useEffect(() => {
-		localStorage.setItem('incomeData', JSON.stringify(incomeData))
+		if (Object.keys(incomeData).length) {
+			localStorage.setItem('incomeData', JSON.stringify(incomeData))
+		}
 	}, [incomeData])
 
 	// AJOUT D'UNE CHARGE VARIABLE A LOCALSTORAGE
 	useEffect(() => {
-		if (incomeData.monthlyIncome) {
-			calculateVariableExpenses()
-			localStorage.setItem(
-				'totalVariableExpenses',
-				JSON.stringify(calculateVariableExpenses())
+		const calculateVariableExpenses = () => {
+			const variableExpensesPercent = variableExpenses.reduce(
+				(acc, cur) => acc + Number(cur.expenseAmount),
+				0
 			)
+			const totalVariableExpense =
+				(incomeData.monthlyIncome * variableExpensesPercent) / 100
+			setTotalVariableExpenses(totalVariableExpense)
+			return totalVariableExpense
 		}
 
-		localStorage.setItem('variableExpenses', JSON.stringify(variableExpenses))
-	}, [variableExpenses])
+		calculateVariableExpenses()
+		localStorage.setItem(
+			'totalVariableExpenses',
+			JSON.stringify(calculateVariableExpenses())
+		)
 
-	// AJOUT D'UNE CHARGE FIXE A LOCALSTORAGE
+		localStorage.setItem('variableExpenses', JSON.stringify(variableExpenses))
+	}, [incomeData, variableExpenses])
+
+	// AJOUT D'UNE CHARGE FIXE A LOCALSTORAGE + CALCUL DU TOTAL DES CHARGES FIXES ET AJOUT DE CE TOTAL A LOCALSTORAGE
 	useEffect(() => {
+		const calculateFixedExpenses = () => {
+			const totalFixedExpense = fixedExpenses.reduce(
+				(acc, cur) => acc + Number(cur.expenseAmount),
+				0
+			)
+			setTotalFixedExpenses(totalFixedExpense)
+			return totalFixedExpense
+		}
+
 		calculateFixedExpenses()
+
 		localStorage.setItem('fixedExpenses', JSON.stringify(fixedExpenses))
 		localStorage.setItem(
 			'totalFixedExpenses',
@@ -63,9 +84,19 @@ const useBudgetApp = () => {
 		)
 	}, [fixedExpenses])
 
-	// AJOUT D'UNE CHARGE DOMESTIQUE A LOCALSTORAGE
+	// AJOUT D'UNE CHARGE DOMESTIQUE A LOCALSTORAGE + CALCUL DU TOTAL DES CHARGES DOMESTIQUES ET AJOUT DE CE TOTAL A LOCALSTORAGE
 	useEffect(() => {
+		const calculateDomesticExpenses = () => {
+			const totalDomesticExpense = domesticExpenses.reduce(
+				(acc, cur) => acc + Number(cur.expenseAmount),
+				0
+			)
+			setTotalDomesticExpenses(totalDomesticExpense)
+			return totalDomesticExpense
+		}
+
 		calculateDomesticExpenses()
+
 		localStorage.setItem('domesticExpenses', JSON.stringify(domesticExpenses))
 		localStorage.setItem(
 			'totalDomesticExpenses',
@@ -73,27 +104,57 @@ const useBudgetApp = () => {
 		)
 	}, [domesticExpenses])
 
-	// AJOUT DU TOTAL DES CHARGES PROFESIONNELLES A LOCALSTORAGE
+	// AJOUT D'UNE CHARGE PROFESSIONNELLE A LOCALSTORAGE + CALCUL DU TOTAL DES CHARGES PROFESSIONNELLES ET AJOUT DE CE TOTAL A LOCALSTORAGE
 	useEffect(() => {
-		calculateTotalProfessionalExpenses()
-		localStorage.setItem(
-			'totalProfessionalExpenses',
-			JSON.stringify(calculateTotalProfessionalExpenses())
-		)
+		const calculateTotalProfessionalExpenses = () => {
+			const totalProfessionalExpenses =
+				totalVariableExpenses + totalFixedExpenses
+			setTotalProfessionalExpenses(totalProfessionalExpenses)
+			return totalProfessionalExpenses
+		}
+		if (Object.keys(incomeData).length) {
+			calculateTotalProfessionalExpenses()
+
+			localStorage.setItem(
+				'totalProfessionalExpenses',
+				JSON.stringify(calculateTotalProfessionalExpenses())
+			)
+		}
 	}, [incomeData, totalVariableExpenses, totalFixedExpenses])
 
-	// AJOUT DU SALAIRE A LOCALSTORAGE
+	// CALCUL DU SALAIRE ET AJOUT DU SALAIRE A LOCALSTORAGE
 	useEffect(() => {
 		if (Object.keys(incomeData).length) {
+			const calculateSalary = () => {
+				const salary =
+					incomeData.monthlyIncome - totalVariableExpenses - totalFixedExpenses
+				setSalary(salary)
+				return salary
+			}
+
 			calculateSalary()
+
 			localStorage.setItem('salary', JSON.stringify(calculateSalary()))
 		}
 	}, [incomeData, totalVariableExpenses, totalFixedExpenses])
 
-	// AJOUT DU BENEFICE A LOCALSTORAGE
+	// CALCUL DU BENEFICE ET AJOUT DU BENEFICE A LOCALSTORAGE
 	useEffect(() => {
-		calculateProfit()
-		localStorage.setItem('profit', JSON.stringify(calculateProfit()))
+		if (Object.keys(incomeData).length) {
+			const calculateProfit = () => {
+				const profit =
+					incomeData.monthlyIncome -
+					totalVariableExpenses -
+					totalFixedExpenses -
+					totalDomesticExpenses
+				setProfit(profit)
+				return profit
+			}
+
+			calculateProfit()
+
+			localStorage.setItem('profit', JSON.stringify(calculateProfit()))
+		}
 	}, [
 		incomeData,
 		totalVariableExpenses,
@@ -105,8 +166,8 @@ const useBudgetApp = () => {
 	// --- FONCTIONS --- //
 	//
 
-	// CALCUL DU CHIFFRE D'AFFAIRE
-	const calculateMonthlyIncome = incomeData => {
+	// AJOUT DU NOMBRE DE JOUR TRAVAILLES ET DU REVENU JOURNALIER + CALCUL DU CA JOURNALIER + AJOUT DU TOUT A LOCALSTORAGE
+	const addIncomeData = incomeData => {
 		const { daysWorked, dailyIncome } = incomeData
 		const monthlyIncome = daysWorked * dailyIncome
 		setIncomeData({
@@ -137,65 +198,6 @@ const useBudgetApp = () => {
 		])
 	}
 
-	// CALCULER LES CHARGES VARIABLES
-	const calculateVariableExpenses = () => {
-		const variableExpensesPercent = variableExpenses.reduce(
-			(acc, cur) => acc + Number(cur.expenseAmount),
-			0
-		)
-		const totalVariableExpense =
-			(incomeData.monthlyIncome * variableExpensesPercent) / 100
-		setTotalVariableExpenses(totalVariableExpense)
-		return totalVariableExpense
-	}
-
-	// CALCULERLES CHARGES FIXES
-	const calculateFixedExpenses = () => {
-		const totalFixedExpense = fixedExpenses.reduce(
-			(acc, cur) => acc + Number(cur.expenseAmount),
-			0
-		)
-		setTotalFixedExpenses(totalFixedExpense)
-		return totalFixedExpense
-	}
-
-	// CALCULER LES CHARGES DOMESTIQUES
-	const calculateDomesticExpenses = () => {
-		const totalDomesticExpense = domesticExpenses.reduce(
-			(acc, cur) => acc + Number(cur.expenseAmount),
-			0
-		)
-		setTotalDomesticExpenses(totalDomesticExpense)
-		return totalDomesticExpense
-	}
-
-	// CALCULER LE TOTAL DES CHARGES PRO
-	const calculateTotalProfessionalExpenses = () => {
-		const totalProfessionalExpenses =
-			totalVariableExpenses + totalFixedExpenses + totalDomesticExpenses
-		setTotalProfessionalExpenses(totalProfessionalExpenses)
-		return totalProfessionalExpenses
-	}
-
-	// CALCULER LE SALAIRE NET
-	const calculateSalary = () => {
-		const salary =
-			incomeData.monthlyIncome - totalVariableExpenses - totalFixedExpenses
-		setSalary(salary)
-		return salary
-	}
-
-	// CALCULER LE BENEFICE
-	const calculateProfit = () => {
-		const profit =
-			incomeData.monthlyIncome -
-			totalVariableExpenses -
-			totalFixedExpenses -
-			totalDomesticExpenses
-		setProfit(profit)
-		return profit
-	}
-
 	// SUPPRIMER UNE CHARGE
 	const deleteTask = (id, expenseType) => {
 		if (expenseType === 'variable') {
@@ -215,6 +217,8 @@ const useBudgetApp = () => {
 				prevTypeExpenses.filter(item => item.id !== id)
 			)
 		}
+
+		console.log(id, expenseType)
 	}
 
 	return {
@@ -228,7 +232,7 @@ const useBudgetApp = () => {
 		totalProfessionalExpenses,
 		salary,
 		profit,
-		calculateMonthlyIncome,
+		addIncomeData,
 		addVariableExpense,
 		addFixedExpense,
 		addDomesticExpense,

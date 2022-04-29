@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 const IncomeForm = ({ incomeData, onSubmit }) => {
 	const [formData, setFormData] = useState({
@@ -6,10 +6,15 @@ const IncomeForm = ({ incomeData, onSubmit }) => {
 		dailyIncome: '',
 	})
 
+	const inputRef = useRef(null)
+
 	const handleSubmit = e => {
 		if (formData.daysWorked && formData.dailyIncome) {
 			e.preventDefault()
 			onSubmit(formData)
+			formData.daysWorked = ''
+			formData.dailyIncome = ''
+			inputRef.current.focus()
 		} else {
 			alert('Veuillez remplir le formulaire')
 		}
@@ -31,6 +36,7 @@ const IncomeForm = ({ incomeData, onSubmit }) => {
 				<div className='form-input'>
 					<label htmlFor='daysWorked'>Nombre de jours travaillés / mois</label>
 					<input
+						ref={inputRef}
 						type='number'
 						id='daysWorked'
 						name='daysWorked'
