@@ -200,19 +200,19 @@ const useBudgetApp = () => {
 
 	// SUPPRIMER UNE CHARGE
 	const deleteTask = (id, expenseType) => {
-		if (expenseType === 'variable') {
+		if (expenseType === 'variables') {
 			setVariableExpenses(prevTypeExpenses =>
 				prevTypeExpenses.filter(item => item.id !== id)
 			)
 		}
 
-		if (expenseType === 'fixed') {
+		if (expenseType === 'fixes') {
 			setFixedExpenses(prevTypeExpenses =>
 				prevTypeExpenses.filter(item => item.id !== id)
 			)
 		}
 
-		if (expenseType === 'domestic') {
+		if (expenseType === 'domestiques') {
 			setDomesticExpenses(prevTypeExpenses =>
 				prevTypeExpenses.filter(item => item.id !== id)
 			)

@@ -42,6 +42,7 @@ const IncomeForm = ({ incomeData, onSubmit }) => {
 						name='daysWorked'
 						value={formData.daysWorked}
 						onChange={handleChange}
+						min='0'
 					/>
 				</div>
 				<div className='form-input'>
@@ -52,6 +53,7 @@ const IncomeForm = ({ incomeData, onSubmit }) => {
 						name='dailyIncome'
 						value={formData.dailyIncome}
 						onChange={handleChange}
+						min='0'
 					/>
 				</div>
 				<button>Ajouter</button>

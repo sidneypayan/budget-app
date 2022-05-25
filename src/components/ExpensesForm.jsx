@@ -74,6 +74,7 @@ const ExpensesForm = ({
 						step='.01'
 						value={formData.expenseAmount}
 						onChange={handleChange}
+						min='0'
 					/>
 				</div>
 				<button>Ajouter</button>
